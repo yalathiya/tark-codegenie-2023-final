@@ -6,15 +6,17 @@ class Train{
     int distance;
 
     Train(int trainNumber, String source, String destination, int distance){
-        trainNumber = this.trainNumber;
-        source = this.source;
-        destination = this.destination;
-        distance = this.distance;
+        this.trainNumber = trainNumber;
+        this.source = source;
+        this.destination = destination;
+        this.distance = distance;
     }
 
-    int coachArrays[] = {0,0,0,0};
-    int coachCount[] = {0,0,0,0};
-    int coachTickets[] = {1,1,1,1};
+    int coachArrays[] = new int[4];
+    int coachCount[] = new int[4];
+    int coachTickets[] = new int[4];
+
+    
     // coachArrays[0] = 0;
     // coachArrays[1] = 0;
     // coachArrays[2] = 0;
@@ -24,18 +26,20 @@ class Train{
     // 2nd index for 2A class
     // 3rd index for 1A class
     void addCoach(String CoachName, int CoachCapacity){
+        // System.out.println("**ADDCOACH**");
+        // System.out.println("CoachName"+CoachName);
         switch(CoachName){
-            case "S":  coachArrays[0] += CoachCapacity; 
-                       coachCount[0]++;
+            case "S":  this.coachArrays[0] += CoachCapacity; 
+                       this.coachCount[0]++;
                        break;
-            case "B":  coachArrays[1] += CoachCapacity; 
-                       coachCount[1]++;
+            case "B":  this.coachArrays[1] += CoachCapacity; 
+                       this.coachCount[1]++;
                        break;
-            case "A":  coachArrays[2] += CoachCapacity; 
-                       coachCount[2]++;
+            case "A":  this.coachArrays[2] += CoachCapacity; 
+                       this.coachCount[2]++;
                        break;
-            case "H":  coachArrays[3] += CoachCapacity;
-                       coachCount[3]++; 
+            case "H":  this.coachArrays[3] += CoachCapacity;
+                       this.coachCount[3]++; 
                        break;
         }
     }
@@ -55,6 +59,13 @@ class Train{
                        coachTickets[3]++; 
                        break;
         }
+    }
+
+    int[] fillsZero(int []arr){
+        for(int i=0; i<arr.length; i++){
+            arr[i] = 0;
+        }
+        return arr;
     }
 
 }
@@ -102,7 +113,9 @@ class TrainReservationSystem{
             int dis = Integer.parseInt(dist);
 
             t1 = new Train(Integer.parseInt(arr[0]), src, dest, dis);
+            // System.out.println(t1.source);
             train.add(t1);
+            // System.out.println("t1.source"+t1.source);
             for(int i=1; i<arrr.length; i++){ 
                 int indexTemp = -1;
                 for(int j=0; j<arrr[i].length(); j++){
@@ -111,8 +124,10 @@ class TrainReservationSystem{
                         break;
                     }
                 }
-                System.out.println(arrr[i]);
-                t1.addCoach(arrr[i].substring(0, indexTemp), Integer.parseInt(arrr[i].substring(indexTemp+1, arrr[i].length())));
+                // System.out.println(arrr[i]);
+                t1.addCoach(arrr[i].substring(0, indexTemp-1), Integer.parseInt(arrr[i].substring(indexTemp+1, arrr[i].length())));
+                // System.out.println("**coachArray**"+t1.coachArrays[0]);
+                // System.out.println("**coachCount**"+t1.coachCount[0]);
             }
         }
 
@@ -121,41 +136,92 @@ class TrainReservationSystem{
         while(true){
             String instruction = sc.nextLine();
             String instructionText[] = instruction.split(" ");
+            boolean flag = true;
             //instructionText[0] = source
             //instructionText[1] = destination
             //instructionText[2] = date
             //instructionText[3] = class
             //instructionText[4] = number of passengers
             int size = train.size();
+            // System.out.println(size);
+            // for(int i=0; i<size; i++){
+            //     System.out.println(instructionText[i]);
+            // }
+            // System.out.println(train.get(0).source);
+            // System.out.println(train.get(0).destination);
             // System.out.println(train.get(0).trainNumber);
             for(int i=0; i<size; i++){
-                if(train.get(i).source == instructionText[0] && train.get(i).destination == instructionText[1]){
+                // System.out.println("**");
+                // System.out.println(instructionText[0]);
+                // System.out.println(train.get(0).source);
+                // System.out.println(train.get(0).destination);
+                // System.out.println(instructionText[1]);
+                if((train.get(i).source.equals(instructionText[0])) && (train.get(i).destination.equals(instructionText[1]))){
+                    
+                    // System.out.println("****");
+                    // System.out.println("in3 "+instructionText[3]);
                     switch(instructionText[3]){
-                        case "SL":  if(train.get(i).coachCount[0] >0 && train.get(i).coachArrays[0] > 0){
-                                        int fair = Integer.parseInt(instructionText[4])*train.get(i).distance*1;
-                                        System.out.println(tkt+" "+fair);
+                        case "SL":  //System.out.println("coachCount "+train.get(i).coachCount);
+                                    if(train.get(i).coachCount[0] >0 && train.get(i).coachArrays[0] > 0){
+                                        int fairSL = Integer.parseInt(instructionText[4])*train.get(i).distance*1;
+                                        train.get(i).coachArrays[0] -= Integer.parseInt(instructionText[4]);
+                                        System.out.println(tkt+" "+fairSL);
+                                        System.out.println("Remaining Sits "+train.get(i).coachArrays[0]);
+                                        flag = false;
+                                        tkt++;
+                                    }
+                                    else if(train.get(i).coachCount[0] <= 0 || train.get(i).coachArrays[0] <= 0){
+                                        System.out.println("No Seats Available");
+                                        flag = false;
                                     }
                                     break;
                         case "3A":  if(train.get(i).coachCount[1] >0 && train.get(i).coachArrays[1] > 0){
-                                        int fair = Integer.parseInt(instructionText[4])*train.get(i).distance*2;
-                                        System.out.println(tkt+" "+fair);
+                                        int fair3A = Integer.parseInt(instructionText[4])*train.get(i).distance*2;
+                                        train.get(i).coachArrays[1] -= Integer.parseInt(instructionText[4]);
+                                        System.out.println("Remaining Sits "+train.get(i).coachArrays[1]);
+                                        System.out.println(tkt+" "+fair3A);
+                                        flag = false;
+                                        tkt++;
+                                    }
+                                    else if(train.get(i).coachCount[1] <= 0 || train.get(i).coachArrays[1] <= 0){
+                                        System.out.println("No Seats Available");
+                                        flag = false;
                                     }
                                     break;
                         case "2A":  if(train.get(i).coachCount[2] >0 && train.get(i).coachArrays[2] > 0){
-                                        int fair = Integer.parseInt(instructionText[4])*train.get(i).distance*3;
-                                        System.out.println(tkt+" "+fair);
+                                        int fair2A = Integer.parseInt(instructionText[4])*train.get(i).distance*3;
+                                        train.get(i).coachArrays[2] -= Integer.parseInt(instructionText[4]);
+                                        System.out.println("Remaining Sits "+train.get(i).coachArrays[2]);
+                                        System.out.println(tkt+" "+fair2A);
+                                        flag = false;
+                                        tkt++;
+                                    }
+                                    else if(train.get(i).coachCount[2] <= 0 || train.get(i).coachArrays[2] <= 0){
+                                        System.out.println("No Seats Available");
+                                        flag = false;
                                     }
                                     break;
                         case "1A":  if(train.get(i).coachCount[3] >0 && train.get(i).coachArrays[3] > 0){
-                                        int fair = Integer.parseInt(instructionText[4])*train.get(i).distance*4;
-                                        System.out.println(tkt+" "+fair);
+                                        int fair1A = Integer.parseInt(instructionText[4])*train.get(i).distance*4;
+                                        train.get(i).coachArrays[3] -= Integer.parseInt(instructionText[4]);
+                                        System.out.println("Remaining Sits "+train.get(i).coachArrays[3]);
+                                        System.out.println(tkt+" "+fair1A);
+                                        flag = false;
+                                        tkt++;
+                                    }
+                                    else if(train.get(i).coachCount[3] <= 0 || train.get(i).coachArrays[3] <= 0){
+                                        System.out.println("No Seats Available");
+                                        flag = false;
                                     }
                                     break;
                     }
                     break;
                 }
             }
-            System.out.println("INVALID");
+            if(flag){
+                System.out.println("No Trains Available");
+            } 
+            // flag = true
         }
     }
 }
