@@ -162,9 +162,10 @@ class TrainReservationSystem{
                     // System.out.println("in3 "+instructionText[3]);
                     switch(instructionText[3]){
                         case "SL":  //System.out.println("coachCount "+train.get(i).coachCount);
+                        train.get(i).coachArrays[0] -= Integer.parseInt(instructionText[4]);
                                     if(train.get(i).coachCount[0] >0 && train.get(i).coachArrays[0] > 0){
                                         int fairSL = Integer.parseInt(instructionText[4])*train.get(i).distance*1;
-                                        train.get(i).coachArrays[0] -= Integer.parseInt(instructionText[4]);
+                                        
                                         System.out.println(tkt+" "+fairSL);
                                         System.out.println("Remaining Sits "+train.get(i).coachArrays[0]);
                                         flag = false;
@@ -175,9 +176,10 @@ class TrainReservationSystem{
                                         flag = false;
                                     }
                                     break;
-                        case "3A":  if(train.get(i).coachCount[1] >0 && train.get(i).coachArrays[1] > 0){
+                        case "3A":  train.get(i).coachArrays[1] -= Integer.parseInt(instructionText[4]);
+                                    if(train.get(i).coachCount[1] >0 && train.get(i).coachArrays[1] > 0){
                                         int fair3A = Integer.parseInt(instructionText[4])*train.get(i).distance*2;
-                                        train.get(i).coachArrays[1] -= Integer.parseInt(instructionText[4]);
+                                        
                                         System.out.println("Remaining Sits "+train.get(i).coachArrays[1]);
                                         System.out.println(tkt+" "+fair3A);
                                         flag = false;
@@ -188,9 +190,10 @@ class TrainReservationSystem{
                                         flag = false;
                                     }
                                     break;
-                        case "2A":  if(train.get(i).coachCount[2] >0 && train.get(i).coachArrays[2] > 0){
+                        case "2A":  train.get(i).coachArrays[2] -= Integer.parseInt(instructionText[4]);
+                                    if(train.get(i).coachCount[2] >0 && train.get(i).coachArrays[2] > 0){
                                         int fair2A = Integer.parseInt(instructionText[4])*train.get(i).distance*3;
-                                        train.get(i).coachArrays[2] -= Integer.parseInt(instructionText[4]);
+                                        
                                         System.out.println("Remaining Sits "+train.get(i).coachArrays[2]);
                                         System.out.println(tkt+" "+fair2A);
                                         flag = false;
@@ -201,15 +204,17 @@ class TrainReservationSystem{
                                         flag = false;
                                     }
                                     break;
-                        case "1A":  if(train.get(i).coachCount[3] >0 && train.get(i).coachArrays[3] > 0){
+
+                        case "1A":  train.get(i).coachArrays[3] -= Integer.parseInt(instructionText[4]);
+                                    if(train.get(i).coachCount[3] >0 && train.get(i).coachArrays[3] > 0){
                                         int fair1A = Integer.parseInt(instructionText[4])*train.get(i).distance*4;
-                                        train.get(i).coachArrays[3] -= Integer.parseInt(instructionText[4]);
+                                        
                                         System.out.println("Remaining Sits "+train.get(i).coachArrays[3]);
                                         System.out.println(tkt+" "+fair1A);
                                         flag = false;
                                         tkt++;
                                     }
-                                    else if(train.get(i).coachCount[3] <= 0 || train.get(i).coachArrays[3] <= 0){
+                                    else if(train.get(i).coachArrays[3] <= 0){
                                         System.out.println("No Seats Available");
                                         flag = false;
                                     }
